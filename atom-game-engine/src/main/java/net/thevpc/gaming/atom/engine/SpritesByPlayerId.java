@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class SpritesByPlayerId implements SpriteFilter {
+public abstract class SpritesByPlayerId implements SpriteFilter {
     private final Set<Integer> playerIds;
 
     public SpritesByPlayerId(int... playerIds) {

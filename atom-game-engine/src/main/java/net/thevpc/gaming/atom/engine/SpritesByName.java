@@ -47,4 +47,9 @@ public class SpritesByName implements SpriteFilter {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public void MoveToPointSpriteMainTask() {
+
+    }
+
 }

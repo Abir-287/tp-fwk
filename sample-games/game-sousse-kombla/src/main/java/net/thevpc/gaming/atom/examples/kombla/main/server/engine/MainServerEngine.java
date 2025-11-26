@@ -27,7 +27,7 @@ public class MainServerEngine extends BaseMainEngine {
     protected void sceneActivating() {
         super.sceneActivating();
         //put here your MainClientDAO instance
-//        dal = new TCPMainServerDAO();
+         //   dal = new TCPMainServerDAO();
 //        dal = new UDPMainServerDAO();
         dal.start(new MainServerDAOListener() {
             @Override

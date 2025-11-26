@@ -36,7 +36,12 @@ public interface SpriteFilter {
     }
 
     static SpriteFilter byPlayerId(int... players) {
-        return new SpritesByPlayerId(players);
+        return new SpritesByPlayerId(players) {
+            @Override
+            public void MoveToPointSpriteMainTask() {
+
+            }
+        };
     }
 
 
@@ -46,4 +51,5 @@ public interface SpriteFilter {
         return engine.getSprites().stream().filter(x -> accept(x)).collect(Collectors.toList());
     }
 
+    void MoveToPointSpriteMainTask();
 }

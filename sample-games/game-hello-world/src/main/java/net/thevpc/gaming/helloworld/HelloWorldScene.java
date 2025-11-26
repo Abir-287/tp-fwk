@@ -4,6 +4,8 @@ import net.thevpc.gaming.atom.annotations.*;
 import net.thevpc.gaming.atom.debug.AdjustViewController;
 import net.thevpc.gaming.atom.engine.SceneEngine;
 import net.thevpc.gaming.atom.engine.SpriteFilter;
+import net.thevpc.gaming.atom.engine.maintasks.MoveToPointSpriteMainTask;
+import net.thevpc.gaming.atom.model.ModelPoint;
 import net.thevpc.gaming.atom.model.Orientation;
 import net.thevpc.gaming.atom.model.Point;
 import net.thevpc.gaming.atom.presentation.*;
@@ -46,7 +48,8 @@ public class HelloWorldScene {
         scene.addLayer(Layers.fillBoardImage("/itachi.jpeg"));
         scene.addLayer(Layers.debug());
         scene.addController(new SpriteController(SpriteFilter.byName("Ball1")).setArrowKeysLayout());
-        scene.addController(new SpriteController(SpriteFilter.byName("Ball2")).setArrowKeysLayout());
+        scene.addController(new SpriteController2(SpriteFilter.byName("Ball2")).setESDFLayout());
+       // scene.addController(new MouseMoveController(SpriteFilter.byName("Ball2")));
         scene.addController(new AdjustViewController());
         scene.addComponent(
                 new SLabel("Click CTRL-D to switch debug mode, use Arrows to move the ball")

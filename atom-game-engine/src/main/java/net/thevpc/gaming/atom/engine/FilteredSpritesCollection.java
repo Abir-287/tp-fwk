@@ -36,6 +36,11 @@ public final class FilteredSpritesCollection implements SceneEngineModelListener
     }
 
     @Override
+    public void MoveToPointSpriteMainTask() {
+
+    }
+
+    @Override
     public Iterator<Sprite> iterator() {
         return new ArrayList<Sprite>(getSprites()).iterator();
     }

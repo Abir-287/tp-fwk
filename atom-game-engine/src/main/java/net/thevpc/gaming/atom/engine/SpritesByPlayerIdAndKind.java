@@ -59,6 +59,10 @@ public class SpritesByPlayerIdAndKind implements SpriteFilter {
     }
 
     @Override
+    public void MoveToPointSpriteMainTask() {
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(playerId, spriteKind);
     }

@@ -35,6 +35,11 @@ public class SpritesByKind implements SpriteFilter {
     }
 
     @Override
+    public void MoveToPointSpriteMainTask() {
+
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(kinds);
     }
