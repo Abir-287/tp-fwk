@@ -6,27 +6,28 @@ package net.thevpc.gaming.atom.examples.kombla.main.client.engine;
 
 import net.thevpc.gaming.atom.examples.kombla.main.client.dal.MainClientDAO;
 import net.thevpc.gaming.atom.examples.kombla.main.client.dal.MainClientDAOListener;
+import net.thevpc.gaming.atom.examples.kombla.main.client.dal.TCPMainClientDAO;
 import net.thevpc.gaming.atom.examples.kombla.main.shared.engine.AbstractMainEngine;
 import net.thevpc.gaming.atom.examples.kombla.main.shared.model.DynamicGameModel;
 import net.thevpc.gaming.atom.examples.kombla.main.shared.model.StartGameInfo;
 import net.thevpc.gaming.atom.annotations.AtomSceneEngine;
 import net.thevpc.gaming.atom.model.*;
 
-
 /**
  * @author Taha Ben Salah (taha.bensalah@gmail.com)
  */
 @AtomSceneEngine(id = "mainClient", columns = 12, rows = 12)
 public class MainClientEngine extends AbstractMainEngine {
-    private MainClientDAO dao=null;//new TCPMainClientDAO();
+    private MainClientDAO dao = new TCPMainClientDAO();
+
     public MainClientEngine() {
     }
 
     @Override
     protected void sceneActivating() {
-        //put here your MainClientDAO instance
-        //dao = new TCPMainClientDAO();
-//        dao = new UDPMainClientDAO();
+        // put here your MainClientDAO instance
+        // dao = new TCPMainClientDAO();
+        // dao = new UDPMainClientDAO();
 
         dao.start(new MainClientDAOListener() {
             @Override
@@ -43,21 +44,21 @@ public class MainClientEngine extends AbstractMainEngine {
                         }
                         for (Sprite sprite : model.getSprites()) {
                             Sprite s = createSprite(sprite.getKind()).copyFrom(sprite);
-                            if("Person".equals(sprite.getKind()) || "Bomb".equals(sprite.getKind())){
-                                s.setSize(new ModelDimension(0.5,0.5));
+                            if ("Person".equals(sprite.getKind()) || "Bomb".equals(sprite.getKind())) {
+                                s.setSize(new ModelDimension(0.5, 0.5));
                             }
                             addSprite(s);
                         }
-                        MainClientEngine.this.getModel().setProperty("modelChanged",System.currentTimeMillis());
+                        MainClientEngine.this.getModel().setProperty("modelChanged", System.currentTimeMillis());
                     }
                 });
             }
         }, getAppConfig(getGameEngine()));
-        //call server to connect
+        // call server to connect
         StartGameInfo startGameInfo = dao.connect();
-        //configure model's maze with data retrieved.
+        // configure model's maze with data retrieved.
         setModel(new DefaultSceneEngineModel(startGameInfo.getMaze()));
-        //create new player
+        // create new player
         setCurrentPlayerId(startGameInfo.getPlayerId());
     }
 
@@ -66,20 +67,20 @@ public class MainClientEngine extends AbstractMainEngine {
     }
 
     public void move(Orientation direction) {
-        switch (direction){
-            case EAST:{
+        switch (direction) {
+            case EAST: {
                 dao.sendMoveRight();
                 break;
             }
-            case WEST:{
+            case WEST: {
                 dao.sendMoveLeft();
                 break;
             }
-            case NORTH:{
+            case NORTH: {
                 dao.sendMoveUp();
                 break;
             }
-            case SOUTH:{
+            case SOUTH: {
                 dao.sendMoveDown();
                 break;
             }

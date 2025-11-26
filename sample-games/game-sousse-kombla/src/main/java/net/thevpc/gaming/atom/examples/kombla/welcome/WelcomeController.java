@@ -28,14 +28,13 @@ import net.thevpc.gaming.atom.presentation.components.STextField;
 /**
  * Default Controller for Welcome Scene.
  * This controller handles SPACE and ENTER key pressed to start the game.
- * Upon pressing SPACE or ENTER, modesList combobox is check for the selected 
- * mode (Local, Host or Join) to create, register and run the appropriate 
+ * Upon pressing SPACE or ENTER, modesList combobox is check for the selected
+ * mode (Local, Host or Join) to create, register and run the appropriate
  * BattleFieldEngine (any implementation of AbstractBattleFieldEngine).
+ * 
  * @author Taha Ben Salah (taha.bensalah@gmail.com)
  */
-@AtomSceneController(
-        scene = "welcome"
-)
+@AtomSceneController(scene = "welcome")
 public class WelcomeController extends DefaultSceneController {
 
     /**
@@ -46,47 +45,55 @@ public class WelcomeController extends DefaultSceneController {
 
     /**
      * called by AGE framework on key pressed
+     * 
      * @param e key press event
      */
     @Override
     public void keyPressed(SceneKeyEvent e) {
         Game game = e.getScene().getGame();
-        //get the current scene
+        // get the current scene
         WelcomeScene scene = (WelcomeScene) e.getScene();
-        //get needed components from scene
+        // get needed components from scene
         SList modesList = scene.getComponent("modesList");
+        STextField playerName = scene.getComponent("playerName");
         STextField serverAddress = scene.getComponent("serverAddress");
         STextField serverPort = scene.getComponent("serverPort");
-        //find the selected mode value
+        // find the selected mode value
         AppRole mode = (AppRole) modesList.getSelectedValue();
-        //switch according to pressed key
+        // switch according to pressed key
         switch (e.getKeyCode()) {
             case SPACE:
             case ENTER: {
                 GameEngine gameEngine = scene.getSceneEngine().getGameEngine();
                 switch (mode) {
                     case LOCAL_GAME: {
-                        //activate the created scene
+                        // activate the created scene
                         gameEngine.setActiveSceneEngine("mainLocal");
                         break;
                     }
                     case HOST_GAME: {
-                        //store serverPort in global model to be accessible from engine later
-                        AbstractMainEngine.getAppConfig(gameEngine).setServerPort(Integer.parseInt(serverPort.getText()));
-                        //activate the created scene
+                        // store playerName and serverPort in global model to be accessible from engine
+                        // later
+                        AbstractMainEngine.getAppConfig(gameEngine).setPlayerName(playerName.getText());
+                        AbstractMainEngine.getAppConfig(gameEngine)
+                                .setServerPort(Integer.parseInt(serverPort.getText()));
+                        // activate the created scene
                         gameEngine.setActiveSceneEngine("mainServer");
                         break;
                     }
                     case JOIN_GAME: {
-                        //store serverAddress and serverPort in global model to be accessible from engine later
+                        // store playerName, serverAddress and serverPort in global model to be
+                        // accessible from engine later
+                        AbstractMainEngine.getAppConfig(gameEngine).setPlayerName(playerName.getText());
                         AbstractMainEngine.getAppConfig(gameEngine).setServerAddress(serverAddress.getText());
-                        AbstractMainEngine.getAppConfig(gameEngine).setServerPort(Integer.parseInt(serverPort.getText()));
-                        //activate the created scene
+                        AbstractMainEngine.getAppConfig(gameEngine)
+                                .setServerPort(Integer.parseInt(serverPort.getText()));
+                        // activate the created scene
                         gameEngine.setActiveSceneEngine("mainClient");
                         break;
                     }
                 }
-                //consume the event not to fire another Controller for the same event
+                // consume the event not to fire another Controller for the same event
                 e.setConsumed(true);
                 break;
             }
