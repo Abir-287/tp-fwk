@@ -19,14 +19,14 @@ import java.awt.*;
 
 public class BomberScene extends DefaultScene {
 
-    public static final ImageMatrixProducer WALL_IMAGE_PRODUCER = new ImageMatrixProducer("/wall.jpg", new ImageGrid(3, 5)
-    ) {
+    public static final ImageMatrixProducer WALL_IMAGE_PRODUCER = new ImageMatrixProducer("/wall.jpg",
+            new ImageGrid(3, 5)) {
         @Override
         public Image getImage(int type, int index) {
             if (index == 0) {
                 index = 3;//
             } else {
-                index = 14;//11+index%4;
+                index = 14;// 11+index%4;
             }
             return super.getImage(type, index);
         }
@@ -34,8 +34,12 @@ public class BomberScene extends DefaultScene {
 
     public BomberScene() {
         setImageProducer(WALL_IMAGE_PRODUCER);
+    }
+
+    @Override
+    public void sceneStarted() {
+        super.sceneStarted();
         getCamera().followSprite(
-                ()-> getSceneEngine().findSpriteByKind("Person")
-        );
+                () -> getSceneEngine().findSpriteByKind("Person"));
     }
 }

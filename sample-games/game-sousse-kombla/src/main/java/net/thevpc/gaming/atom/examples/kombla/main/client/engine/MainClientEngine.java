@@ -6,7 +6,7 @@ package net.thevpc.gaming.atom.examples.kombla.main.client.engine;
 
 import net.thevpc.gaming.atom.examples.kombla.main.client.dal.MainClientDAO;
 import net.thevpc.gaming.atom.examples.kombla.main.client.dal.MainClientDAOListener;
-import net.thevpc.gaming.atom.examples.kombla.main.client.dal.TCPMainClientDAO;
+import net.thevpc.gaming.atom.examples.kombla.main.client.dal.RMIMainClientDAO;
 import net.thevpc.gaming.atom.examples.kombla.main.shared.engine.AbstractMainEngine;
 import net.thevpc.gaming.atom.examples.kombla.main.shared.model.DynamicGameModel;
 import net.thevpc.gaming.atom.examples.kombla.main.shared.model.StartGameInfo;
@@ -18,7 +18,7 @@ import net.thevpc.gaming.atom.model.*;
  */
 @AtomSceneEngine(id = "mainClient", columns = 12, rows = 12)
 public class MainClientEngine extends AbstractMainEngine {
-    private MainClientDAO dao = new TCPMainClientDAO();
+    private MainClientDAO dao = new RMIMainClientDAO();
 
     public MainClientEngine() {
     }
@@ -36,13 +36,28 @@ public class MainClientEngine extends AbstractMainEngine {
                         resetSprites();
                         resetPlayers();
                         getModel().setFrame(model.getFrame());
-                        for (Player player : model.getPlayers()) {
-                            Player p = createPlayer().copyFrom(player);
+
+                        // Convert SerializablePlayers to Players
+                        for (net.thevpc.gaming.atom.examples.kombla.main.shared.model.SerializablePlayer serPlayer : model
+                                .getPlayers()) {
+                            Player p = createPlayer();
+                            p.setId(serPlayer.getId());
+                            p.setName(serPlayer.getName());
                             addPlayer(p);
                         }
-                        for (Sprite sprite : model.getSprites()) {
-                            Sprite s = createSprite(sprite.getKind()).copyFrom(sprite);
-                            if ("Person".equals(sprite.getKind()) || "Bomb".equals(sprite.getKind())) {
+
+                        // Convert SerializableSprites to Sprites
+                        for (net.thevpc.gaming.atom.examples.kombla.main.shared.model.SerializableSprite serSprite : model
+                                .getSprites()) {
+                            Sprite s = createSprite(serSprite.getKind());
+                            s.setId(serSprite.getId());
+                            s.setName(serSprite.getName());
+                            s.setLocation(serSprite.getX(), serSprite.getY());
+                            s.setDirection(serSprite.getDirection());
+                            s.setPlayerId(serSprite.getPlayerId());
+                            s.setMovementStyle(serSprite.getMovementStyle());
+                            s.setLife(serSprite.getLife());
+                            if ("Person".equals(serSprite.getKind()) || "Bomb".equals(serSprite.getKind())) {
                                 s.setSize(new ModelDimension(0.5, 0.5));
                             }
                             addSprite(s);

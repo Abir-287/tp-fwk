@@ -11,7 +11,7 @@ import net.thevpc.gaming.atom.examples.kombla.main.shared.model.StartGameInfo;
 import net.thevpc.gaming.atom.annotations.AtomSceneEngine;
 import net.thevpc.gaming.atom.model.*;
 import net.thevpc.gaming.atom.examples.kombla.main.server.dal.MainServerDAO;
-import net.thevpc.gaming.atom.examples.kombla.main.server.dal.TCPMainServerDAO;
+import net.thevpc.gaming.atom.examples.kombla.main.server.dal.RMIMainServerDAO;
 
 import java.util.stream.Collectors;
 
@@ -27,7 +27,7 @@ public class MainServerEngine extends BaseMainEngine {
     protected void sceneActivating() {
         super.sceneActivating();
         // put here your MainClientDAO instance
-        dal = new TCPMainServerDAO();
+        dal = new RMIMainServerDAO();
         // dal = new UDPMainServerDAO();
         dal.start(new MainServerDAOListener() {
             @Override
@@ -78,11 +78,32 @@ public class MainServerEngine extends BaseMainEngine {
             }
             case "GAMING":
             case "GAMEOVER": {
-                // do nothing
-                dal.sendModelChanged(new DynamicGameModel(getFrame(),
-                        // copy to fix ObjectOutputStream issue!
-                        getSprites().stream().map(Sprite::copy).collect(Collectors.toList()),
-                        getPlayers().stream().map(Player::copy).collect(Collectors.toList())));
+                // Convert sprites to serializable DTOs
+                java.util.List<net.thevpc.gaming.atom.examples.kombla.main.shared.model.SerializableSprite> serializableSprites = getSprites()
+                        .stream().map(sprite -> {
+                            net.thevpc.gaming.atom.examples.kombla.main.shared.model.SerializableSprite s = new net.thevpc.gaming.atom.examples.kombla.main.shared.model.SerializableSprite();
+                            s.setId(sprite.getId());
+                            s.setKind(sprite.getKind());
+                            s.setName(sprite.getName());
+                            s.setX(sprite.getLocation().getX());
+                            s.setY(sprite.getLocation().getY());
+                            s.setDirection(sprite.getDirection());
+                            s.setPlayerId(sprite.getPlayerId());
+                            s.setMovementStyle(sprite.getMovementStyle());
+                            s.setLife(sprite.getLife());
+                            return s;
+                        }).collect(Collectors.toList());
+
+                // Convert players to serializable DTOs
+                java.util.List<net.thevpc.gaming.atom.examples.kombla.main.shared.model.SerializablePlayer> serializablePlayers = getPlayers()
+                        .stream().map(player -> {
+                            net.thevpc.gaming.atom.examples.kombla.main.shared.model.SerializablePlayer p = new net.thevpc.gaming.atom.examples.kombla.main.shared.model.SerializablePlayer();
+                            p.setId(player.getId());
+                            p.setName(player.getName());
+                            return p;
+                        }).collect(Collectors.toList());
+
+                dal.sendModelChanged(new DynamicGameModel(getFrame(), serializableSprites, serializablePlayers));
                 break;
             }
         }
