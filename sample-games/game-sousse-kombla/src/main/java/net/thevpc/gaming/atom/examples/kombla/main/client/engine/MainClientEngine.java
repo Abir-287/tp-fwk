@@ -25,10 +25,8 @@ public class MainClientEngine extends AbstractMainEngine {
 
     @Override
     protected void sceneActivating() {
-        // put here your MainClientDAO instance
-        // dao = new TCPMainClientDAO();
-        // dao = new UDPMainClientDAO();
-
+        // Don't auto-connect here - wait for explicit connect call
+        // This prevents connection errors when the game starts
         dao.start(new MainClientDAOListener() {
             @Override
             public void onModelChanged(final DynamicGameModel model) {
@@ -54,12 +52,19 @@ public class MainClientEngine extends AbstractMainEngine {
                 });
             }
         }, getAppConfig(getGameEngine()));
-        // call server to connect
-        StartGameInfo startGameInfo = dao.connect();
-        // configure model's maze with data retrieved.
-        setModel(new DefaultSceneEngineModel(startGameInfo.getMaze()));
-        // create new player
-        setCurrentPlayerId(startGameInfo.getPlayerId());
+
+        // Try to connect - if it fails, it's okay, user might be in host mode
+        try {
+            StartGameInfo startGameInfo = dao.connect();
+            setModel(new DefaultSceneEngineModel(startGameInfo.getMaze()));
+            setCurrentPlayerId(startGameInfo.getPlayerId());
+        } catch (Exception e) {
+            // Connection failed - this is expected if no server is running
+            // Initialize with a default maze for now
+            int[][] defaultMaze = new int[12][12];
+            setModel(new DefaultSceneEngineModel(defaultMaze));
+            System.out.println("Client not connected - waiting for server or switch to host mode");
+        }
     }
 
     public void releaseBomb() {

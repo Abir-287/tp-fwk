@@ -10,9 +10,9 @@ package net.thevpc.gaming.atom.examples.kombla.main.shared.engine;
  * @author vpc
  */
 public class AppConfig {
-    private String serverAddress;
+    private String serverAddress = "localhost";
     private String playerName;
-    private int serverPort;
+    private int serverPort = 1234;
 
     public String getPlayerName() {
         return playerName;
@@ -38,5 +38,5 @@ public class AppConfig {
     public void setServerPort(int serverPort) {
         this.serverPort = serverPort;
     }
-    
+
 }

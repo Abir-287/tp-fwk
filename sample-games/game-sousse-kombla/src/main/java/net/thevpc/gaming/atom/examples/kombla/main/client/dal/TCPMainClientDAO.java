@@ -27,6 +27,7 @@ public class TCPMainClientDAO implements MainClientDAO {
     public void start(MainClientDAOListener listener, AppConfig config) {
         this.listener = listener;
         this.config = config;
+
     }
 
     @Override
@@ -114,6 +115,7 @@ public class TCPMainClientDAO implements MainClientDAO {
         double direction = inputStream.readDouble();
         int playerId = inputStream.readInt();
         int movementStyle = inputStream.readInt();
+        int life = inputStream.readInt();
         DefaultSprite sprite = new DefaultSprite();
         sprite.setId(id);
         sprite.setKind(kind);
@@ -122,6 +124,7 @@ public class TCPMainClientDAO implements MainClientDAO {
         sprite.setDirection(direction);
         sprite.setPlayerId(playerId);
         sprite.setMovementStyle(movementStyle);
+        sprite.setLife(life);
         int propsCount = inputStream.readInt();
         for (int i = 0; i < propsCount; i++) {
             String key = inputStream.readUTF();

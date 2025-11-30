@@ -126,6 +126,7 @@ public class TCPMainServerDAO implements MainServerDAO {
         out.writeDouble(sprite.getDirection());
         out.writeInt(sprite.getPlayerId());
         out.writeInt(sprite.getMovementStyle());
+        out.writeInt(sprite.getLife());
         Map<String, Object> properties = sprite.getProperties();
         if (properties == null) {
             out.writeInt(0);
